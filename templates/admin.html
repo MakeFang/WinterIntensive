@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Queue</title>
+</head>
+<body>
+<h1>Test Restaurant</h1>
+{% for party in queue %}
+<p>{{party.data.name}}, party of {{party.data.party_num}}, {{party.data.present}}</p>
+<p>{{party.data.uid}}</p>
+{% endfor %}
+<form action="/admin/next" method="get">
+    <button type="submit">Process Next</button>
+</form>
+</body>
+</html>
