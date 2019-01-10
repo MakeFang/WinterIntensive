@@ -58,7 +58,7 @@ def view_queue():
 
     else:
         print(session)
-        return render_template('index.html', queue = app.customer_queue)
+        return render_template('index.html', queue = app.customer_queue, cur = app.currently_serving)
 
 
 @app.route('/queue/new')
@@ -68,13 +68,20 @@ def show_enqueue_form():
 
 @app.route('/admin')
 def admin_panel():
-    return render_template('admin.html', queue = app.customer_queue)
+    return render_template('admin.html', queue = app.customer_queue, cur = app.currently_serving)
 
 
 @app.route('/admin/next')
 def process_next():
     processing = app.customer_queue.find_next_eligible()
     print(processing.name)
-    app.currently_serving[processing.uid] = time() + 300
-    print('expiring at ', app.currently_serving[processing.uid])
+    processing.exp = time() + 300
+    app.currently_serving[processing.uid] = processing
+    print('expiring at ', app.currently_serving[processing.uid].exp)
+    return redirect('/admin')
+
+@app.route('/admin/finish')
+def finish():
+    app.customer_queue.delete_by_uid(uuid.UUID(request.args.get('finish')))
+    del app.currently_serving[uuid.UUID(request.args.get('finish'))]
     return redirect('/admin')

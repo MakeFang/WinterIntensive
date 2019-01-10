@@ -8,6 +8,12 @@
 </head>
 <body>
 <h1>Test Restaurant</h1>
+<h2>Currently Serving:</h2>
+{% for current in cur.keys() %}
+<p>{{cur[current].name}}, party of {{cur[current].party_num}}</p>
+<!-- <p>{{cur[current]}}</p> -->
+{% endfor %}
+<h2>Queue:</h2>
 {% for party in queue %}
 <p>{{party.data.name}}, party of {{party.data.party_num}}, {{party.data.present}}</p>
 <p>{{party.data.uid}}</p>
@@ -17,7 +23,7 @@
 </form>
 <form action="/queue" method="post">
     <input type="hidden" name="_method" value="DELETE" />
-    <button type="submit">Cancel Queue</button>
+    <button type="submit">Leave Queue</button>
 </form>
 <form action="/queue" method="post">
     <input type="hidden" name="_method" value="PUT" />
