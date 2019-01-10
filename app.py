@@ -79,6 +79,7 @@ def process_next():
     app.currently_serving[processing.uid] = processing
     print('expiring at ', app.currently_serving[processing.uid].exp)
     return redirect('/admin')
+    
 
 @app.route('/admin/finish')
 def finish():
