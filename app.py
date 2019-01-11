@@ -25,8 +25,8 @@ app.customer_queue.append(Customer('Braus', 4, True))
 app.customer_queue.append(Customer('Caroline', 12, True))
 
 redis.set('c_q', pickle.dumps(app.customer_queue))
-
-app.currently_serving = {}
+redis.set('c_s', pickle.dumps({}))
+# app.currently_serving = {}
 
 
 @app.before_request
@@ -56,6 +56,7 @@ def add_header(r):
 def view_queue():
     # print(pickle.loads(redis.get('c_q')))
     customer_queue = pickle.loads(redis.get('c_q'))
+    currently_serving = pickle.loads(redis.get('c_s'))
     if request.method == 'POST':
         if 'uid' in session:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'), uid=session['uid'])
@@ -86,7 +87,7 @@ def view_queue():
 
     else:
         print(session)
-        return render_template('index.html', queue = customer_queue, cur = app.currently_serving)
+        return render_template('index.html', queue = customer_queue, cur = currently_serving)
 
 
 @app.route('/queue/new')
@@ -97,7 +98,8 @@ def show_enqueue_form():
 @app.route('/admin')
 def admin_panel():
     customer_queue = pickle.loads(redis.get('c_q'))
-    return render_template('admin.html', queue = customer_queue, cur = app.currently_serving)
+    currently_serving = pickle.loads(redis.get('c_s'))
+    return render_template('admin.html', queue = customer_queue, cur = currently_serving)
 
 
 @app.route('/admin/next')
@@ -108,15 +110,19 @@ def process_next():
         return redirect('/admin')
     print(processing.name)
     processing.exp = time() + 300
-    app.currently_serving[processing.uid] = processing
-    print('expiring at ', app.currently_serving[processing.uid].exp)
+    currently_serving = pickle.loads(redis.get('c_s'))
+    currently_serving[processing.uid] = processing
+    print('expiring at ', currently_serving[processing.uid].exp)
+    redis.set('c_s', pickle.dumps(currently_serving))
     return redirect('/admin')
 
 
 @app.route('/admin/finish')
 def finish():
     customer_queue = pickle.loads(redis.get('c_q'))
+    currently_serving = pickle.loads(redis.get('c_s'))
     customer_queue.delete_by_uid(uuid.UUID(request.args.get('finish')))
-    del app.currently_serving[uuid.UUID(request.args.get('finish'))]
+    del currently_serving[uuid.UUID(request.args.get('finish'))]
+    redis.set('c_s', pickle.dumps(currently_serving))
     redis.set('c_q', pickle.dumps(customer_queue))
     return redirect('/admin')
