@@ -15,7 +15,11 @@
     <div class="container">
         <div class="cur-call">
             Estimated Serving Time
-            <p>{{final_time.decode("utf-8")}}</p>
+            {% if final_time %}
+                <p>{{final_time.decode("utf-8")}}</p>
+            {% else %}
+                <p>N/A</p>
+            {% endif %}
         </div>
         <div class="cur-call">
             Currently Calling
