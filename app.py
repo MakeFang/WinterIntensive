@@ -8,7 +8,7 @@ import pickle
 import redis
 from flask import Flask, render_template, request, redirect, session
 from customer_queue import CustomerQueueLL, Customer
-from time import gmtime, time
+from time import gmtime, time, strftime, localtime
 from redis import Redis
 import uuid
 
@@ -66,17 +66,20 @@ def view_queue():
         if 'uid' in session:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'), uid=session['uid'])
             customer_queue.find_by_uid_and_update(session['uid'], new_customer)
+            redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
         else:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'))
             print(request.form)
             customer_queue.append(new_customer)
             session['uid'] = new_customer.uid
+            redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
         redis.set('c_q', pickle.dumps(customer_queue))
         return redirect('/queue')
 
     elif request.method == 'DELETE':
         if 'uid' in session:
             customer_queue.delete_by_uid(session['uid'])
+            redis.hset('session', session['uid'], 'n/a')
         redis.set('c_q', pickle.dumps(customer_queue))
         return redirect('/queue')
 
@@ -92,7 +95,11 @@ def view_queue():
 
     else:
         print(session)
-        return render_template('index.html', queue = customer_queue, cur = currently_serving)
+        if 'uid' in session:
+            final_time = redis.hget('session', session['uid'])
+        else:
+            final_time = 'n/a'
+        return render_template('index.html', queue = customer_queue, cur = currently_serving, final_time = final_time)
 
 
 @app.route('/queue/new')
