@@ -52,6 +52,11 @@ def add_header(r):
     return r
 
 
+@app.route('/')
+def home():
+    return redirect('/queue')
+
+
 @app.route('/queue', methods = ['GET', 'POST', 'DELETE', 'PUT'])
 def view_queue():
     # print(pickle.loads(redis.get('c_q')))
