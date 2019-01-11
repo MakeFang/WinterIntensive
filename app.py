@@ -39,11 +39,11 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
-    
+
 
 @app.route('/queue', methods = ['GET', 'POST', 'DELETE', 'PUT'])
 def view_queue():
-
+    print(app.customer_queue)
     if request.method == 'POST':
         if 'uid' in session:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'), uid=session['uid'])
