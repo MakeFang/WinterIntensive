@@ -4,18 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/queue.css') }}">
     <title>Queue Form</title>
 </head>
 <body>
-<form action="/queue" method="POST">
-<label for="name">Name of Party</label>
-<input type="text" name="name" id="name" placeholder="Name">
-<!-- <label for="party-num">Number of People</label>
-<input type="radio" name="party-num" id="party-num"> -->
-<input type="radio" id="1" name="party-num" value="1"><label for="1">1</label>
-<input type="radio" id="2" name="party-num" value="2"><label for="2">2</label>
-<input type="radio" id="3" name="party-num" value="3"><label for="3">3</label>
-<button type="submit">Submit</button>
-</form>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/queue">Test Restaurant</a>
+    </nav>
+    <div class="container">
+    <div class="cur-call">
+        Enter Queue
+    </div>
+    <form action="/queue" method="POST">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+        </div>
+        <p>Party size</p>
+        <div class="btn-group btn-group-toggle"  data-toggle="buttons">
+            <label class="btn btn-primary active" for="1">
+                <input type="radio" id="1" name="party-num" value="1" required checked>1
+            </label>
+            <label class="btn btn-primary" for="2">
+                <input type="radio" id="2" name="party-num" value="2">2
+            </label>
+            <label class="btn btn-primary" for="3">
+                <input type="radio" id="3" name="party-num" value="3">3
+            </label>
+            <label class="btn btn-primary" for="4">
+                <input type="radio" id="3" name="party-num" value="4">4
+            </label>
+            <label class="btn btn-primary" for="5">
+                <input type="radio" id="3" name="party-num" value="5">5
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>

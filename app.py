@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.customer_queue = CustomerQueueLL()
-app.customer_queue.append(Customer('Alan', 2, True))
+app.customer_queue.append(Customer('Alan', 2, False))
 app.customer_queue.append(Customer('Braus', 4, True))
 app.customer_queue.append(Customer('Caroline', 12, True))
 app.currently_serving = {}
@@ -74,12 +74,14 @@ def admin_panel():
 @app.route('/admin/next')
 def process_next():
     processing = app.customer_queue.find_next_eligible()
+    if not processing:
+        return redirect('/admin')
     print(processing.name)
     processing.exp = time() + 300
     app.currently_serving[processing.uid] = processing
     print('expiring at ', app.currently_serving[processing.uid].exp)
     return redirect('/admin')
-    
+
 
 @app.route('/admin/finish')
 def finish():
