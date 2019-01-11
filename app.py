@@ -2,6 +2,7 @@
 
 The user will be able to view, queue, dequeue.
 """
+import os
 import flask
 import pickle
 import redis
