@@ -9,7 +9,7 @@ from time import gmtime, time
 import uuid
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = 'secret'
 
 app.customer_queue = CustomerQueueLL()
 app.customer_queue.append(Customer('Alan', 2, False))
