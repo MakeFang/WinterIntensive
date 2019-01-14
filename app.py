@@ -13,8 +13,8 @@ from redis import Redis
 import uuid
 
 app = Flask(__name__)
-# redis = Redis(host='localhost', port=6379, db=0)
-redis = redis.from_url(os.environ['REDISCLOUD_URL'])
+redis = Redis(host='localhost', port=6379, db=0)
+# redis = redis.from_url(os.environ['REDISCLOUD_URL'])
 app.secret_key = 'secret'
 app.config['REDIS_QUEUE_KEY'] = 'my_queue'
 
@@ -138,3 +138,8 @@ def finish():
     redis.set('c_s', pickle.dumps(currently_serving))
     redis.set('c_q', pickle.dumps(customer_queue))
     return redirect('/admin')
+
+
+@app.route('/admin/dashboard')
+def display_dashboard():
+    return render_template('dashboard.html')
