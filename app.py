@@ -11,23 +11,26 @@ from customer_queue import CustomerQueueLL, Customer
 from time import gmtime, time, strftime, localtime
 from redis import Redis
 import uuid
+import estimate_time
 
 app = Flask(__name__)
 redis = Redis(host='localhost', port=6379, db=0)
 # redis = redis.from_url(os.environ['REDISCLOUD_URL'])
 app.secret_key = 'secret'
 app.config['REDIS_QUEUE_KEY'] = 'my_queue'
+app.estimation = estimate_time.TimeEstimation()
 
 # These hard-coded stuff will be moved once I complete the implementations of Redis with Flask.
 app.customer_queue = CustomerQueueLL()
-app.customer_queue.append(Customer('Alan', 2, False))
+app.customer_queue.append(Customer('Alan', 3, False))
 app.customer_queue.append(Customer('Braus', 4, True))
-app.customer_queue.append(Customer('Caroline', 12, True))
+app.customer_queue.append(Customer('Caroline', 2, True))
+app.current_waiting_time = app.estimation.get_total_time(10)
 
 redis.set('c_q', pickle.dumps(app.customer_queue))
 redis.set('c_s', pickle.dumps({}))
 # app.currently_serving = {}
-
+print(app.current_waiting_time)
 
 @app.before_request
 def before_request():
@@ -65,27 +68,32 @@ def view_queue():
     if request.method == 'POST':
         if 'uid' in session:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'), uid=session['uid'])
-            customer_queue.find_by_uid_and_update(session['uid'], new_customer)
-            redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
+            head, count = customer_queue.find_by_uid_and_update(session['uid'], new_customer)
+            # redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
+            redis.hset('session', str(new_customer.uid), app.current_waiting_time[count-1])
         else:
             new_customer = Customer(request.form.get('name'), request.form.get('party-num'))
             print(request.form)
             customer_queue.append(new_customer)
             session['uid'] = new_customer.uid
-            redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
+            count = customer_queue.length()
+            # redis.hset('session', str(new_customer.uid), strftime("%X", localtime()))
+            redis.hset('session', str(new_customer.uid), app.current_waiting_time[count-1])
         redis.set('c_q', pickle.dumps(customer_queue))
         return redirect('/queue')
 
     elif request.method == 'DELETE':
         if 'uid' in session:
             customer_queue.delete_by_uid(session['uid'])
-            redis.hset('session', session['uid'], 'n/a')
+            # redis.hset('session', session['uid'], 'n/a')
+            redis.hdel('session', session['uid'])
+            session.clear()
         redis.set('c_q', pickle.dumps(customer_queue))
         return redirect('/queue')
 
     elif request.method == 'PUT':
         if 'uid' in session:
-            target = customer_queue.find(lambda x: x.uid == session['uid'])
+            target, count = customer_queue.find(lambda x: x.uid == session['uid'])
             if target:
                 target.present = not target.present
             # new_customer = Customer(request.form.get('name'), request.form.get('party-num'), present=True, uid=session['uid'])
@@ -96,7 +104,16 @@ def view_queue():
     else:
         print(session)
         if 'uid' in session:
-            final_time = redis.hget('session', session['uid'])
+            print(customer_queue)
+            print(customer_queue.tail.data.uid)
+            data, count = customer_queue.find_by_uid(session['uid'])
+            print(data, count)
+            if data:
+                redis.hset('session', str(session['uid']), app.current_waiting_time[count-1])
+                final_time = redis.hget('session', session['uid'])
+            else:
+                # session.clear()
+                final_time = 'n/a'
         else:
             final_time = 'n/a'
         return render_template('index.html', queue = customer_queue, cur = currently_serving, final_time = final_time)
@@ -117,7 +134,7 @@ def admin_panel():
 @app.route('/admin/next')
 def process_next():
     customer_queue = pickle.loads(redis.get('c_q'))
-    processing = customer_queue.find_next_eligible()
+    processing, count = customer_queue.find_next_eligible()
     if not processing:
         return redirect('/admin')
     print(processing.name)

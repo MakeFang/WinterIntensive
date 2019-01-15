@@ -1,36 +1,22 @@
-# Queue
+# EZQueue
 
-One Paragraph of project description goes here
+EZQueue is an [app](http://bit.ly/EZQueue) that allows people to enter queue remotely. Currently it's build for restaurants. The tool is for both customers and business owners. Using queueing models built on data for your restaurant, EZQueue provides accurate queue-waiting-time for customers and valuable business analytics for business owners.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+### For customers:
+
+Click this [link](http://bit.ly/EZQueue) or paste bit.ly/EZQueue into your browser to view the prototype for a queue page.
+
+### For business owners:
+
+Click this [link](http://bit.ly/EZQDashboard) for a prototype of the restaurant data dashboard.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+Currently data dashboard requires a Tableau account.
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 

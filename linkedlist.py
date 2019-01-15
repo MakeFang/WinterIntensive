@@ -104,11 +104,13 @@ class LinkedList(object):
         # TODO: Loop through all nodes to find item where quality(item) is True
         # TODO: Check if node's data satisfies given quality function
         node = self.head
+        count = 0
         while node is not None:
+            count += 1
             if quality(node.data):
-                return node.data
+                return node.data, count
             node = node.next
-        return None
+        return None, count
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
@@ -152,13 +154,15 @@ class LinkedList(object):
         However, if quality has some time complexity O(g(x)), then the runtime
         would be O(n*g(x))."""
         node = self.head
+        count = 0
         while node is not None:
+            count += 1
             if quality(node.data):
                 node.data = item
-                return node.data
+                return node.data, count
             node = node.next
         self.append(item)
-        return self.head
+        return self.head, count
 
     def delete_q(self, quality):
         """Delete the given item from this linked list, or raise ValueError.
