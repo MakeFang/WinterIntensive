@@ -14,8 +14,8 @@ import uuid
 import estimate_time
 
 app = Flask(__name__)
-redis = Redis(host='localhost', port=6379, db=0)
-# redis = redis.from_url(os.environ['REDISCLOUD_URL'])
+# redis = Redis(host='localhost', port=6379, db=0)
+redis = redis.from_url(os.environ['REDISCLOUD_URL'])
 app.secret_key = 'secret'
 app.config['REDIS_QUEUE_KEY'] = 'my_queue'
 app.estimation = estimate_time.TimeEstimation()
