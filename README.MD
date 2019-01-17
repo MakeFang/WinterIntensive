@@ -16,9 +16,9 @@ Click this [link](http://bit.ly/EZQDashboard) for a prototype of the restaurant 
 
 Currently data dashboard requires a Tableau account.
 
-### Installing
+<!-- ### Installing -->
 
-## Running the tests
+## Running the tests (To be completed)
 
 Explain how to run the automated tests for this system
 
@@ -38,19 +38,21 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
+## Deployment (To be completed)
 
 Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Python 3](https://docs.python.org/3/) - The underlying language.
+* [Flask](http://flask.pocoo.org/) - Web framework.
+* [Redis](https://redis.io/) - Where the queue is stored.
+* [Tableau](https://www.tableau.com/) - Data dashboard building and sharing.
+* [Numpy](http://www.numpy.org/), [Scipy](https://www.scipy.org/) - Used to build the M/E<sup>k</sup>/c queue model for waiting-time computation.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/kfa408) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -58,7 +60,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Kuan-Ying Fang** - *Initial work* - [KYFang](https://github.com/kfa408)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
